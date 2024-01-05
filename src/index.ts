@@ -1,4 +1,4 @@
-import { startWeek, getMonthDays, getYearDays, addDays } from './utils'
+import { startWeek, getMonthDays, getYearDays, addDays } from './utils/index'
 
 const defineColorParseHandle = (value: number): string => {
   const intValue = isNaN(value) ? 0 : Number(value)
@@ -17,13 +17,17 @@ interface ContriGraphOption {
   colorParse?: (value: number) => string;
 }
 
-export class ContriGraph {
+class ContriGraph {
   canvas: CanvasRenderingContext2D | null
   size: number
   year: number
   gapSize: number
   data: Record<string, number>
   colorParse: (value: number) => string
+  canvasDom: HTMLCanvasElement
+
+  public width: number = 0;
+  public height: number = 0;
 
   constructor(option: ContriGraphOption) {
     const { canvas, size = 10, gapSize = 5, data = {}, colorParse, year } = option
@@ -31,6 +35,7 @@ export class ContriGraph {
       throw new Error('Miss required param: canvas')
     }
     this.canvas = canvas.getContext('2d')
+    this.canvasDom = canvas
     this.size = size
     this.gapSize = gapSize
     this.data = data
@@ -38,8 +43,8 @@ export class ContriGraph {
     this.year = year || new Date().getFullYear()
   }
   render(month: number): void {
-    if (month) return this.renderMonth(month)
-    else return this.renderYear()
+    if (month) this.renderMonth(month)
+    else this.renderYear()
   }
   ['createCanvas'](x: number, y: number, color: string): void {
     if (this.canvas !== null) {
@@ -52,6 +57,7 @@ export class ContriGraph {
     const startWeekNum = startWeek(this.year, month);
     const renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfMonth).fill(1))
     let dateNow = `${this.year}-${month}-01`
+    this.getSizeOfCanvas(renderPieces.length)
     renderPieces.forEach((piece, index) => {
       const col = Math.floor(index / 7)
       const row = index % 7
@@ -70,6 +76,7 @@ export class ContriGraph {
     const daysOfYear = getYearDays(this.year)
     const renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfYear).fill(1))
     let dateNow = `${this.year}-01-01`
+    this.getSizeOfCanvas(renderPieces.length)
     renderPieces.forEach((piece, index) => {
       const col = Math.floor(index / 7)
       const row = index % 7
@@ -84,4 +91,15 @@ export class ContriGraph {
       this.createCanvas(col, row, color)
     })
   }
+  ['getSizeOfCanvas'](length: number): void {
+    const row = Math.ceil(length / 7)
+    const col = 7
+    this.width = (row * this.size) + ((row - 1) * this.gapSize)
+    this.height = (col * this.size) + ((col - 1) * this.gapSize)
+
+    this.canvasDom.width = this.width
+    this.canvasDom.height = this.height
+  }
 }
+
+export default ContriGraph
