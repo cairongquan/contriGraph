@@ -4,8 +4,16 @@
   "description": "contri图表生成插件",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "rollup:build": "rm -fr dist && pnpm rollup -c"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "cairongquan",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@rollup/rollup-darwin-arm64": "^4.9.3",
+    "rollup": "^4.9.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  }
 }
