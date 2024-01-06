@@ -2,7 +2,7 @@
 
 ContriGraph 是一个用于在 Canvas 上渲染 GitHub 贡献图的类。
 
-## 安装
+## 安装 Install
 
 使用 npm 安装：
 

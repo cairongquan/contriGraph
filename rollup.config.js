@@ -1,8 +1,8 @@
 import typescript from 'rollup-plugin-typescript2';
 import { readFileSync } from 'fs';
-import { terser } from 'rollup-plugin-terser';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
+// import { terser } from 'rollup-plugin-terser';
+// import resolve from '@rollup/plugin-node-resolve';
+// import commonjs from '@rollup/plugin-commonjs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 const pkgName = packageJson.umdModuleName;
