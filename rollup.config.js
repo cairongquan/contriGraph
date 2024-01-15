@@ -12,7 +12,7 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      file: 'index.js',
+      file: './resource/index.js',
       format: 'esm',
     },
     // {
