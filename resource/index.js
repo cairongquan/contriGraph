@@ -64,7 +64,7 @@ class ContriGraph {
         const daysOfMonth = getMonthDays(this.year, month);
         const startWeekNum = startWeek(this.year, month);
         const renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfMonth).fill(1));
-        let dateNow = `${this.year}-${month}-01`;
+        let dateNow = `${this.year}-${String(month).padStart(2, '0')}-01`;
         this.getSizeOfCanvas(renderPieces.length);
         renderPieces.forEach((piece, index) => {
             const col = Math.floor(index / 7);

@@ -1,6 +1,6 @@
 {
   "name": "contri-graph",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "contri图表生成插件",
   "main": "index.js",
   "sideEffects": true,
