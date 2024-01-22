@@ -4,6 +4,8 @@ import { readFileSync } from 'fs';
 // import resolve from '@rollup/plugin-node-resolve';
 // import commonjs from '@rollup/plugin-commonjs';
 
+import copyFileBuildPlugin from './build.plugin'
+
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 const pkgName = packageJson.umdModuleName;
 
@@ -43,5 +45,6 @@ export default {
     typescript({
       tsconfig: './tsconfig.json',
     }),
+    copyFileBuildPlugin(['README.md','package.json','index.d.ts','LICENSE'],'resource')
   ],
 };

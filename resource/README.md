@@ -8,7 +8,6 @@ ContriGraph 是一个用于在 Canvas 上渲染 GitHub 贡献图的类。
 ## 安装 Install
 
 使用 npm 安装：
-
 ```bash
 npm install contrib-graph
 ```
@@ -67,5 +66,4 @@ render(month?: number): void
 width:number // 生成canvas的宽
 height:number //生成canvas的高
 ```
-
 
