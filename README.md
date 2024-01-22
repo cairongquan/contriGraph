@@ -2,6 +2,9 @@
 
 ContriGraph 是一个用于在 Canvas 上渲染 GitHub 贡献图的类。
 
+## 官网地址
+[ContriGraph官网简介地址](https://www.warriro10.top/contriGraphIntro/)
+
 ## 安装 Install
 
 使用 npm 安装：
