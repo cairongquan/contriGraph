@@ -1,6 +1,11 @@
 import typescript from 'rollup-plugin-typescript2';
-import { readFileSync } from 'fs';
-// import { terser } from 'rollup-plugin-terser';
+import {
+  readFileSync
+} from 'fs';
+// import uglify from "rollup-plugin-uglify";
+import {
+  terser
+} from 'rollup-plugin-terser';
 // import resolve from '@rollup/plugin-node-resolve';
 // import commonjs from '@rollup/plugin-commonjs';
 
@@ -12,8 +17,7 @@ const pkgName = packageJson.umdModuleName;
 
 export default {
   input: 'src/index.ts',
-  output: [
-    {
+  output: [{
       file: './resource/index.js',
       format: 'esm',
     },
@@ -34,17 +38,17 @@ export default {
     //     resolve(),
     //   ],
     // },
-    // {
-    //   file: 'dist/bundle/index.js',
-    //   format: 'iife',
-    //   name: pkgName,
-    //   plugins: [terser()],
-    // },
+    {
+      file: './resource/index.min.js',
+      format: 'esm',
+      name: pkgName,
+      plugins: [terser()],
+    },
   ],
   plugins: [
     typescript({
       tsconfig: './tsconfig.json',
     }),
-    copyFileBuildPlugin(['README.md','package.json','index.d.ts','LICENSE'],'resource')
+    copyFileBuildPlugin(['README.md', 'package.json', 'index.d.ts', 'LICENSE'], 'resource')
   ],
 };
