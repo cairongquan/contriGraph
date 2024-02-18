@@ -15,7 +15,9 @@
     "node",
     "canvas",
     "contributions",
-    "github"
+    "github",
+    "github contributions",
+    "plugin"
   ],
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",
