@@ -34,14 +34,23 @@ const defineColorParseHandle = (value) => {
 };
 class ContriGraph {
     constructor(option) {
+        this.canvas = null;
+        this.svg = null;
+        this.canvasDom = null;
         this.width = 0;
         this.height = 0;
-        const { canvas, size = 10, gapSize = 5, data = {}, colorParse, year } = option;
-        if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-            throw new Error('Miss required param: canvas');
+        const { canvas, svg, size = 10, gapSize = 5, data = {}, colorParse, year } = option;
+        if (canvas instanceof HTMLCanvasElement) {
+            this.isSvgOrCanvas = 'canvas';
+            this.canvas = canvas.getContext('2d');
+            this.canvasDom = canvas;
         }
-        this.canvas = canvas.getContext('2d');
-        this.canvasDom = canvas;
+        else if (svg instanceof SVGElement) {
+            this.isSvgOrCanvas = "svg";
+            this.svg = svg;
+        }
+        else
+            throw new Error("miss required param: canvas or svg");
         this.size = size;
         this.gapSize = gapSize;
         this.data = data;
@@ -101,12 +110,14 @@ class ContriGraph {
         });
     }
     ['getSizeOfCanvas'](length) {
-        const row = Math.ceil(length / 7);
-        const col = 7;
-        this.width = (row * this.size) + ((row - 1) * this.gapSize);
-        this.height = (col * this.size) + ((col - 1) * this.gapSize);
-        this.canvasDom.width = this.width;
-        this.canvasDom.height = this.height;
+        if (this.isSvgOrCanvas === 'canvas') {
+            const row = Math.ceil(length / 7);
+            const col = 7;
+            this.width = (row * this.size) + ((row - 1) * this.gapSize);
+            this.height = (col * this.size) + ((col - 1) * this.gapSize);
+            this.canvasDom.width = this.width;
+            this.canvasDom.height = this.height;
+        }
     }
 }
 

@@ -2,16 +2,18 @@
 type ColorParseFunction = (value: number) => string;
 
 interface ContriGraphOption {
-  canvas: Element | null;
+  svg?: SVGElement;
+  canvas?: HTMLCanvasElement;
   size?: number;
   gapSize?: number;
   data?: Record<string, number>;
   colorParse?: ColorParseFunction;
   year?: number;
+  colorParse?: (value: number) => string;
 }
 
 declare class ContriGraph {
-  private canvas: Element | null;
+  private canvas: HTMLCanvasElement;
   private size: number;
   private gapSize: number;
   private data: Record<string, number>;

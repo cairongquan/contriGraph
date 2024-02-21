@@ -9,7 +9,8 @@ const defineColorParseHandle = (value: number): string => {
 }
 
 interface ContriGraphOption {
-  canvas: HTMLCanvasElement;
+  canvas?: HTMLCanvasElement;
+  svg?: SVGElement;
   size?: number;
   gapSize?: number;
   data?: Record<string, number>;
@@ -18,24 +19,31 @@ interface ContriGraphOption {
 }
 
 class ContriGraph {
-  canvas: CanvasRenderingContext2D | null
+  canvas: CanvasRenderingContext2D | null = null
+  svg: SVGElement | null = null
+  canvasDom: HTMLCanvasElement | null = null
   size: number
   year: number
   gapSize: number
   data: Record<string, number>
   colorParse: (value: number) => string
-  canvasDom: HTMLCanvasElement
+  isSvgOrCanvas: "canvas" | "svg"
 
   public width: number = 0;
   public height: number = 0;
 
   constructor(option: ContriGraphOption) {
-    const { canvas, size = 10, gapSize = 5, data = {}, colorParse, year } = option
-    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-      throw new Error('Miss required param: canvas')
+    const { canvas, svg, size = 10, gapSize = 5, data = {}, colorParse, year } = option
+    if (canvas instanceof HTMLCanvasElement) {
+      this.isSvgOrCanvas = 'canvas'
+      this.canvas = canvas.getContext('2d')
+      this.canvasDom = canvas
     }
-    this.canvas = canvas.getContext('2d')
-    this.canvasDom = canvas
+    else if (svg instanceof SVGElement) {
+      this.isSvgOrCanvas = "svg"
+      this.svg = svg
+    }
+    else throw new Error("miss required param: canvas or svg")
     this.size = size
     this.gapSize = gapSize
     this.data = data
@@ -92,13 +100,15 @@ class ContriGraph {
     })
   }
   ['getSizeOfCanvas'](length: number): void {
-    const row = Math.ceil(length / 7)
-    const col = 7
-    this.width = (row * this.size) + ((row - 1) * this.gapSize)
-    this.height = (col * this.size) + ((col - 1) * this.gapSize)
+    if (this.isSvgOrCanvas === 'canvas') {
+      const row = Math.ceil(length / 7)
+      const col = 7
+      this.width = (row * this.size) + ((row - 1) * this.gapSize);
+      this.height = (col * this.size) + ((col - 1) * this.gapSize);
 
-    this.canvasDom.width = this.width
-    this.canvasDom.height = this.height
+      (this.canvasDom as HTMLCanvasElement).width = this.width;
+      (this.canvasDom as HTMLCanvasElement).height = this.height;
+    }
   }
 }
 
