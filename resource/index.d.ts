@@ -2,7 +2,7 @@
 type ColorParseFunction = (value: number) => string;
 
 interface ContriGraphOption {
-  svg?: SVGElement;
+  svg?: SVGSVGElement;
   canvas?: HTMLCanvasElement;
   size?: number;
   gapSize?: number;
@@ -10,6 +10,8 @@ interface ContriGraphOption {
   colorParse?: ColorParseFunction;
   year?: number;
   colorParse?: (value: number) => string;
+  isSvgOrCanvas: "canvas" | "svg"
+  radius?: number
 }
 
 declare class ContriGraph {
@@ -25,11 +27,11 @@ declare class ContriGraph {
   public height: number;
 
   constructor(option: ContriGraphOption);
-  render(month?: number): void;
+  render(month?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12): void;
   private createCanvas(x: number, y: number, color: string): void;
-  private renderMonth(month: number): void;
-  private renderYear(): void;
+  private createRect(x: number, y: number, color: string): void;
   private getSizeOfCanvas(): void;
+  private getSizeOfSvg(): void;
 }
 
 

@@ -39,13 +39,13 @@ class ContriGraph {
         this.canvasDom = null;
         this.width = 0;
         this.height = 0;
-        const { canvas, svg, size = 10, gapSize = 5, data = {}, colorParse, year } = option;
+        const { canvas, svg, size = 10, gapSize = 5, data = {}, colorParse, year, radius = 2 } = option;
         if (canvas instanceof HTMLCanvasElement) {
             this.isSvgOrCanvas = 'canvas';
             this.canvas = canvas.getContext('2d');
             this.canvasDom = canvas;
         }
-        else if (svg instanceof SVGElement) {
+        else if (svg instanceof SVGSVGElement) {
             this.isSvgOrCanvas = "svg";
             this.svg = svg;
         }
@@ -56,25 +56,24 @@ class ContriGraph {
         this.data = data;
         this.colorParse = typeof colorParse === 'function' && colorParse || defineColorParseHandle;
         this.year = year || new Date().getFullYear();
+        this.radius = radius;
     }
     render(month) {
-        if (month)
-            this.renderMonth(month);
-        else
-            this.renderYear();
-    }
-    ['createCanvas'](x, y, color) {
-        if (this.canvas !== null) {
-            this.canvas.fillStyle = color;
-            this.canvas.fillRect(x * (this.size + this.gapSize), y * (this.size + this.gapSize), this.size, this.size);
+        let renderPieces = [], dateNow = '';
+        if (month && !isNaN(month)) {
+            const daysOfMonth = getMonthDays(this.year, month);
+            const startWeekNum = startWeek(this.year, month);
+            renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfMonth).fill(1));
+            dateNow = `${this.year}-${String(month).padStart(2, '0')}-01`;
         }
-    }
-    ['renderMonth'](month) {
-        const daysOfMonth = getMonthDays(this.year, month);
-        const startWeekNum = startWeek(this.year, month);
-        const renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfMonth).fill(1));
-        let dateNow = `${this.year}-${String(month).padStart(2, '0')}-01`;
-        this.getSizeOfCanvas(renderPieces.length);
+        else {
+            const startWeekNum = startWeek(this.year, 1);
+            const dayOfYear = getYearDays(this.year);
+            renderPieces = new Array(startWeekNum).fill(0).concat(new Array(dayOfYear).fill(1));
+            dateNow = `${this.year}-01-01`;
+        }
+        this.isSvgOrCanvas === 'canvas' ? this.getSizeOfCanvas(renderPieces.length) : this.getSizeOfSvg(renderPieces.length);
+        let renderRectsStringCode = this.isSvgOrCanvas === 'svg' ? '' : null;
         renderPieces.forEach((piece, index) => {
             const col = Math.floor(index / 7);
             const row = index % 7;
@@ -86,28 +85,20 @@ class ContriGraph {
             else {
                 color = 'rgba(255, 0, 255, 0)';
             }
-            this.createCanvas(col, row, color);
+            this.isSvgOrCanvas === 'canvas' ? this.createCanvas(col, row, color) : renderRectsStringCode += this.createRect(col, row, color);
         });
+        this.isSvgOrCanvas === 'svg' && (this.svg.innerHTML = renderRectsStringCode);
     }
-    ['renderYear']() {
-        const startWeekNum = startWeek(this.year, 1);
-        const daysOfYear = getYearDays(this.year);
-        const renderPieces = new Array(startWeekNum).fill(0).concat(new Array(daysOfYear).fill(1));
-        let dateNow = `${this.year}-01-01`;
-        this.getSizeOfCanvas(renderPieces.length);
-        renderPieces.forEach((piece, index) => {
-            const col = Math.floor(index / 7);
-            const row = index % 7;
-            let color = '';
-            if (piece !== 0) {
-                color = this.colorParse(this.data[dateNow] ? this.data[dateNow] : 0);
-                dateNow = addDays(dateNow, 1);
-            }
-            else {
-                color = 'rgba(255, 0, 255, 0)';
-            }
-            this.createCanvas(col, row, color);
-        });
+    ['createCanvas'](x, y, color) {
+        if (this.canvas !== null) {
+            this.canvas.fillStyle = color;
+            this.canvas.fillRect(x * (this.size + this.gapSize), y * (this.size + this.gapSize), this.size, this.size);
+        }
+    }
+    ['createRect'](x, y, color) {
+        const xAttrValue = x * this.size + this.gapSize * x;
+        const yAttrValue = y * this.size + this.gapSize * y;
+        return `<rect width="${this.size}" height="${this.size}" x="${xAttrValue}" y="${yAttrValue}" rx="${this.radius}" ry="${this.radius}" style="fill:${color}"></rect>`;
     }
     ['getSizeOfCanvas'](length) {
         if (this.isSvgOrCanvas === 'canvas') {
@@ -117,6 +108,18 @@ class ContriGraph {
             this.height = (col * this.size) + ((col - 1) * this.gapSize);
             this.canvasDom.width = this.width;
             this.canvasDom.height = this.height;
+        }
+    }
+    ['getSizeOfSvg'](length) {
+        if (this.isSvgOrCanvas === 'svg') {
+            const row = Math.ceil(length / 7);
+            const col = 7;
+            this.width = (row * this.size) + ((row - 1) * this.gapSize);
+            this.height = (col * this.size) + ((col - 1) * this.gapSize);
+            Object.assign(this.svg.style, {
+                width: this.width,
+                height: this.height
+            });
         }
     }
 }

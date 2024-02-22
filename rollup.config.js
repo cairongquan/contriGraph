@@ -49,6 +49,6 @@ export default {
     typescript({
       tsconfig: './tsconfig.json',
     }),
-    copyFileBuildPlugin(['README.md', 'package.json', 'index.d.ts', 'LICENSE'], 'resource')
+    copyFileBuildPlugin(['README.md', 'package.json', 'index.d.ts', 'LICENSE', 'README_EN.md'], 'resource')
   ],
 };

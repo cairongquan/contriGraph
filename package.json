@@ -1,7 +1,7 @@
 {
   "name": "contri-graph",
-  "version": "0.0.9",
-  "description": "contri图表生成插件",
+  "version": "1.0.0",
+  "description": "Contribution graph visualization library for canvas or SVG.",
   "main": "index.js",
   "scripts": {
     "rollup:build": "rm -fr dist && pnpm rollup -c"
@@ -17,7 +17,10 @@
     "contributions",
     "github",
     "github contributions",
-    "plugin"
+    "plugin",
+    "SVG",
+    "SVG contributions",
+    "visualization"
   ],
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",
